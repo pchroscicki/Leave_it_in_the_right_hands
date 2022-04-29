@@ -3,21 +3,20 @@ from django.shortcuts import render
 # Create your views here.
 from django.views import View
 
-from donation_app.models import Donation
+from donation_app.models import Donation, Institution
 
 
 class LandingPageView(View):
 
     def get(self, request):
-        all_bags = self.donated_bags_counter()
-        supported_institutions = self.supported_institutions_counter()
-        context = {'bags_counter': all_bags, 'institutions_counter': supported_institutions}
+        supported_institutions_count = self.supported_institutions_counter()
+        context = {'bags_counter': sum([x.quantity for x in Donation.objects.all()]),
+                   'institutions_counter': supported_institutions_count,
+                   'foundations': Institution.objects.filter(type='FOUNDATION').order_by('name'),
+                   'ngos': Institution.objects.filter(type='NON-GOVERNMENTAL ORGANISATION').order_by('name'),
+                   'local_charities': Institution.objects.filter(type='LOCAL CHARITY').order_by('name')
+                   }
         return render(request, 'index.html', context)
-
-    @staticmethod
-    def donated_bags_counter():
-        bags_list = [x.quantity for x in Donation.objects.all()]
-        return sum(bags_list)
 
     @staticmethod
     def supported_institutions_counter():

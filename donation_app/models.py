@@ -10,20 +10,14 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
 
 class Institution(models.Model):
-    #type to integer coding:
-    FOUNDATION = 1
-    NGO = 2
-    LOCAL_CHARITY = 3
-
     TYPE_CHOICES = (
-        (FOUNDATION, 'Foundation'),
-        (NGO, 'Non-governmental organisation'),
-        (LOCAL_CHARITY, 'Local charities and community groups'),
+        ('FOUNDATION', 'Foundation'),
+        ('NON-GOVERNMENTAL ORGANISATION', 'Non-governmental organisation'),
+        ('LOCAL CHARITY', 'Local charities and community groups'),
     )
-
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
-    type = models.CharField(choices=TYPE_CHOICES, default=FOUNDATION, max_length=64)
+    type = models.CharField(choices=TYPE_CHOICES, default='FOUNDATION', max_length=64)
     categories = models.ManyToManyField(Category)
 
 class Donation(models.Model):
