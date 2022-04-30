@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.views import View
@@ -42,3 +43,22 @@ class RegisterView(View):
 
     def get(self, request):
         return render(request, 'register.html')
+
+    def post(self, request):
+        first_name = request.POST['name']
+        last_name = request.POST['surname']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        if password == password2:
+            new_user = User.objects.create(
+                                username=email,
+                                first_name=first_name,
+                                last_name=last_name,
+                                email=email)
+            if new_user.is_valid():
+                new_user.save(commit=False)
+                new_user.set_password(password)
+                new_user.save()
+                return redirect('login')
+        return redirect('register')
