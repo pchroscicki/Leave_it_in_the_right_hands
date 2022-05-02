@@ -2,8 +2,8 @@
 {% block template %}
 {%load static %}
         <ul class="nav--actions">
-          <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
-          <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+          <li><a href="{% url 'login' %}#login" class="btn btn--small btn--without-border">Zaloguj</a></li>
+          <li><a href="{% url 'register' %}#register" class="btn btn--small btn--highlighted">Załóż konto</a></li>
         </ul>
       </nav>
 
@@ -60,7 +60,7 @@
         </div>
       </div>
 
-      <a href="{% url 'register' %}" class="btn btn--large">Załóż konto</a>
+      <a href="{% url 'register' %}#register" class="btn btn--large">Załóż konto</a>
     </section>
 
     <section id="about-us" class="about-us">

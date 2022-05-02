@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block template %}
-        <ul class="nav--actions">
-          <!--<li><a href="#">Zaloguj</a></li> -->
+       <!-- <ul class="nav--actions">
+          <li><a href="">Zaloguj</a></li>
           <li class="highlighted"><a href="{% url 'register' %}">Załóż konto</a></li>
-        </ul>
+        </ul>-->
       </nav>
     </header>
 
-    <section class="login-page">
+    <section id="login" class="login-page">
       <h2>Zaloguj się</h2>
       <form>
         <div class="form-group">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="form-group form-group--buttons">
-          <a href="#" class="btn btn--without-border">Załóż konto</a>      
+          <a href="{% url 'register' %}#register" class="btn btn--without-border">Załóż konto</a>
           <button class="btn" type="submit">Zaloguj się</button> 
         </div>
       </form>
