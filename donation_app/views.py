@@ -1,8 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from donation_app.models import Donation, Institution
+from donation_app.models import Donation, Institution, Category
 from donation_app.forms import RegisterForm
 
 
@@ -31,11 +32,12 @@ class LandingPageView(View):
         return len(supported_institutions)
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
 
     def get(self, request):
-
-        return render(request, 'form.html')
+        context = {'categories': Category.objects.all().order_by('id')
+        }
+        return render(request, 'form.html', context)
 
 class LoginView(View):
 
@@ -49,9 +51,9 @@ class LoginView(View):
         if user is not None:
             login(request, user)
             return redirect('index')
-        else:
+        elif user is None:
             return redirect('register')
-        return render(request, 'form.html', {'form': form})
+        return render(request, 'login.html')
 
 
 class LogOutView(View):
