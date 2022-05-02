@@ -1,10 +1,12 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.views import View
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from donation_app.models import Donation, Institution
+from donation_app.forms import RegisterForm
+
 
 # Create your views here.
-from django.views import View
-
-from donation_app.models import Donation, Institution
 
 
 class LandingPageView(View):
@@ -39,26 +41,34 @@ class LoginView(View):
     def get(self, request):
         return render(request, 'login.html')
 
+    def post(self, request):
+        username = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return redirect('register')
+        return render(request, 'form.html', {'form': form})
+
 class RegisterView(View):
 
     def get(self, request):
-        return render(request, 'register.html')
+        form = RegisterForm()
+        return render(request, 'register.html', {'form': form})
 
     def post(self, request):
-        first_name = request.POST['name']
-        last_name = request.POST['surname']
-        email = request.POST['email']
-        password = request.POST['password']
-        password2 = request.POST['password2']
-        if password == password2:
-            new_user = User.objects.create(
-                                username=email,
-                                first_name=first_name,
-                                last_name=last_name,
-                                email=email)
-            if new_user.is_valid():
-                new_user.save(commit=False)
-                new_user.set_password(password)
-                new_user.save()
-                return redirect('login')
-        return redirect('register')
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            password = form.cleaned_data['password']
+            user = User(username=username,
+                        first_name=first_name,
+                        last_name=last_name)
+            user.set_password(password)
+            user.save()
+            return redirect('login')
+        return render(request, 'register.html', {'form': form})
