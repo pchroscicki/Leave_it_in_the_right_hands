@@ -1,8 +1,10 @@
+from django.contrib.auth import authenticate, login
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from donation_app.models import Donation, Institution
 from donation_app.forms import RegisterForm
+
 
 # Create your views here.
 
@@ -38,6 +40,17 @@ class LoginView(View):
 
     def get(self, request):
         return render(request, 'login.html')
+
+    def post(self, request):
+        username = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return redirect('register')
+        return render(request, 'form.html', {'form': form})
 
 class RegisterView(View):
 
