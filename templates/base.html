@@ -19,6 +19,24 @@
             <li><a href="{% url 'add_donation' %}" class="btn btn--without-border">Przekaż dary</a></li>
             <li><a href="{% url 'index' %}#contact" class="btn btn--without-border">Kontakt</a></li>
           </ul>
+          {% if user.is_authenticated %}
+          <ul class="nav--actions">
+            <li class="logged-user">
+              Witaj {{user.first_name}}
+              <ul class="dropdown">
+                <li><a href="#">Profil</a></li>
+                <li><a href="#">Ustawienia</a></li>
+                <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% else %}
+          <ul class="nav--actions">
+            <li><a href="{% url 'login' %}#login" class="btn btn--small btn--without-border">Zaloguj</a></li>
+            <li><a href="{% url 'register' %}#register" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+          </ul>
+          {% endif %}
+        </nav>
   {% block template %}
   {% endblock %}
     <script src="{% static 'js/app.js' %}"></script>
