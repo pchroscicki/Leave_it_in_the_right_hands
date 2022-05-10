@@ -220,6 +220,27 @@ document.addEventListener("DOMContentLoaded", function() {
      */
     updateForm() {
       this.$step.innerText = this.currentStep;
+      var category_form = document.getElementById("category-form");
+      var institution_form = document.getElementById("institution-form");
+      var selected_categories = Array.from(category_form.querySelectorAll("input[name='categories']:checked"));
+
+      // institutions screening (narrows down the institution list to those that accept selected items)
+      if (this.currentStep === 1) {
+        if (selected_categories.length > 0) {
+          var institutions = Array.from(institution_form.querySelectorAll(".single_institute"));
+          for (var i = 0; i < institutions.length; i++) {
+            let categories_institution = Array.from(institutions[i].dataset.categories.replace(/\D/g, ""));
+            var category_match = 0;
+            for (var j = 0; j < selected_categories.length; j++) {
+              if (categories_institution.includes(selected_categories[j].value)) {
+                category_match++}
+              }
+            if (category_match !== selected_categories.length) {institutions[i].style.display = 'none'}
+          }
+        } else {
+          console.log("Nie zaznaczono artykułów do przekazania"); //change into alert
+        }
+      }
 
       // TODO: Validation
 
@@ -235,6 +256,22 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
       // TODO: get data from inputs and show them in summary
+      if (this.currentStep === 5) {
+        var bags = document.getElementById("bags").value;
+        var bags_content_str = ""
+        for (var i = 0; i < selected_categories.length; i++) {var bags_content_str =+ "" +selected_categories[i].data+ ", "}
+        var summary = document.querySelector('.summary');
+        console.log(bags_content_str, bags)
+        if (bags === 1) {summary.querySelector('#sum_bags').innerText = ''+bags+' worek zawierający: '+bags_content_str+''}
+        if (1 < bags < 5) {summary.querySelector('#sum_bags').innerText = ''+bags+' worki zawierające: '+bags_content_str+''}
+        if (4 < bags) {summary.querySelector('#sum_bags').innerText = ''+bags+' worków zawierających: '+bags_content_str+''}
+
+        var institution = (Array.from(institution_form.querySelectorAll("input[name='organization']:checked")).map((elem) => elem.title)).toString();
+
+
+        summary.querySelector('#sum_institution').innerText = 'Dla '+institution+'';
+        console.log(bags_content, summary.querySelector('#sum_institution'));
+      }
     }
 
     /**
