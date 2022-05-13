@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function() {
       var selected_categories = Array.from(category_form.querySelectorAll("input[name='categories']:checked"));
 
       // institutions screening (narrows down the institution list to those that accept selected items)
-      if (this.currentStep === 1) {
+      if (this.currentStep === 2) {
         if (selected_categories.length > 0) {
           var institutions = Array.from(institution_form.querySelectorAll(".single_institute"));
           for (var i = 0; i < institutions.length; i++) {
@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (category_match !== selected_categories.length) {institutions[i].style.display = 'none'}
           }
         } else {
-          console.log("Nie zaznaczono artykułów do przekazania"); //change into alert
+          console.log("Nie zaznaczono artykułów do przekazania");
         }
       }
 
@@ -257,21 +257,18 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
-      // TODO: get data from inputs and show them in summary
-
+      // donation summary
       if (this.currentStep === 5) {
         var bags = document.getElementById("bags").value;
         var bags_content = [];
         for (var k = 0; k < selected_categories.length; k++) {
-          var category_name = selected_categories[k].data-name;
-          console.log(category_name);
+          var category_name = selected_categories[k].dataset.name;
           bags_content.push(category_name);
         }
         var bags_content_str = bags_content.join(', ');
         var summary = document.querySelector('.summary');
         summary.querySelector('#sum_bags').innerText = 'Worki: '+bags+' szt. z: '+bags_content_str+''
-
-        var institution = (institution_form.querySelector("input[name='organization']:checked")).value;
+        var institution = (institution_form.querySelector("input[name='organization']:checked")).dataset.name;
         summary.querySelector('#sum_institution').innerText = 'Dla '+institution+'';
 
         // address summary
