@@ -52,18 +52,19 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form action="form-confirmation.html" method="post">
+        <form action="" method="post">
+          {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active" id="category-form">
             <h3>Zaznacz co chcesz oddać:</h3>
             {% for category in categories %}
-            <div class="form-group form-group--checkbox">
+            <div class="form-group form-group--checkbox single_category">
               <label>
                 <input
                   type="checkbox"
                   name="categories"
                   value="{{category.id}}"
-                  data="{{category.name}}"
+                  data-name="{{category.name}}"
                 />
                 <span class="checkbox"></span>
                 <span class="description">{{category.name}}</span>
@@ -99,7 +100,7 @@
             {% for institution in institutions %}
             <div class="form-group form-group--checkbox single_institute" data-categories="{%for cat in institution.categories.all %} {{cat.id}},{%endfor%}">
               <label>
-                <input type="radio" name="organization" value="old"/>
+                <input type="radio" name="organization" value="{{institution.id}}" data-name="{{institution.name}}"/>
                 <span class="checkbox radio"></span>
                 <span class="description">
                   <div class="title">{{institution.name}}</div>
@@ -122,7 +123,7 @@
             <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
             <div class="form-section form-section--columns">
-              <div class="form-section--column">
+              <div class="form-section--column" id="address-form">
                 <h4>Adres odbioru</h4>
                 <div class="form-group form-group--inline">
                   <label> Ulica <input type="text" name="address" /> </label>
@@ -145,7 +146,7 @@
                 </div>
               </div>
 
-              <div class="form-section--column">
+              <div class="form-section--column" id="data-form">
                 <h4>Termin odbioru</h4>
                 <div class="form-group form-group--inline">
                   <label> Data <input type="date" name="data" /> </label>
@@ -196,19 +197,19 @@
                 <div class="form-section--column">
                   <h4>Adres odbioru:</h4>
                   <ul>
-                    <li>Prosta 51</li>
-                    <li>Warszawa</li>
-                    <li>99-098</li>
-                    <li>123 456 789</li>
+                    <li id="address"></li>
+                    <li id="city"></li>
+                    <li id="postcode"></li>
+                    <li id="phone"></li>
                   </ul>
                 </div>
 
                 <div class="form-section--column">
                   <h4>Termin odbioru:</h4>
                   <ul>
-                    <li>13/12/2018</li>
-                    <li>15:40</li>
-                    <li>Brak uwag</li>
+                    <li id="data"></li>
+                    <li id="time"></li>
+                    <li id="info"></li>
                   </ul>
                 </div>
               </div>

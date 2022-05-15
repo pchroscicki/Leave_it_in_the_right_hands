@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from more_itertools import sliced
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -39,6 +40,33 @@ class AddDonationView(LoginRequiredMixin, View):
                    'institutions': Institution.objects.all()
         }
         return render(request, 'form.html', context)
+
+    def post(self, request):
+        quantity = int(request.POST['bags'])
+        institution = request.POST['organization']
+        phone_number = request.POST['phone']
+        city = request.POST['city']
+        zip_code = request.POST['postcode']
+        pick_up_date = request.POST['data']
+        pick_up_time = request.POST['time']
+        pick_up_comment = request.POST.get('more_info')
+        user = request.user
+        if len(request.POST['address']) < 129:
+            address_1 = request.POST['address']
+            address_2 = ''
+        else:
+            address_list = list(sliced(request.POST['adress'], 128))
+            address_1 = address_list[0]
+            address_2 = address_list[1]
+
+        new_donation = Donation(quantity=quantity, institution_id=institution, phone_number=phone_number,
+                                address_1=address_1, address_2=address_2, city=city, zip_code=zip_code,
+                                pick_up_date=pick_up_date, pick_up_time=pick_up_time,
+                                pick_up_comment=pick_up_comment, user=user)
+        new_donation.save()
+        for id in request.POST.getlist('categories'):
+            new_donation.categories.add(id)
+        return render(request, 'form-confirmation.html')
 
 
 class LoginView(View):

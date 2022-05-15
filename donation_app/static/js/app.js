@@ -222,10 +222,12 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$step.innerText = this.currentStep;
       var category_form = document.getElementById("category-form");
       var institution_form = document.getElementById("institution-form");
+      var address_form = document.getElementById("address-form");
+      var data_form = document.getElementById("data-form");
       var selected_categories = Array.from(category_form.querySelectorAll("input[name='categories']:checked"));
 
       // institutions screening (narrows down the institution list to those that accept selected items)
-      if (this.currentStep === 1) {
+      if (this.currentStep === 2) {
         if (selected_categories.length > 0) {
           var institutions = Array.from(institution_form.querySelectorAll(".single_institute"));
           for (var i = 0; i < institutions.length; i++) {
@@ -238,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (category_match !== selected_categories.length) {institutions[i].style.display = 'none'}
           }
         } else {
-          console.log("Nie zaznaczono artykułów do przekazania"); //change into alert
+          console.log("Nie zaznaczono artykułów do przekazania");
         }
       }
 
@@ -255,22 +257,30 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
-      // TODO: get data from inputs and show them in summary
+      // donation summary
       if (this.currentStep === 5) {
         var bags = document.getElementById("bags").value;
-        var bags_content_str = ""
-        for (var i = 0; i < selected_categories.length; i++) {var bags_content_str =+ "" +selected_categories[i].data+ ", "}
+        var bags_content = [];
+        for (var k = 0; k < selected_categories.length; k++) {
+          var category_name = selected_categories[k].dataset.name;
+          bags_content.push(category_name);
+        }
+        var bags_content_str = bags_content.join(', ');
         var summary = document.querySelector('.summary');
-        console.log(bags_content_str, bags)
-        if (bags === 1) {summary.querySelector('#sum_bags').innerText = ''+bags+' worek zawierający: '+bags_content_str+''}
-        if (1 < bags < 5) {summary.querySelector('#sum_bags').innerText = ''+bags+' worki zawierające: '+bags_content_str+''}
-        if (4 < bags) {summary.querySelector('#sum_bags').innerText = ''+bags+' worków zawierających: '+bags_content_str+''}
-
-        var institution = (Array.from(institution_form.querySelectorAll("input[name='organization']:checked")).map((elem) => elem.title)).toString();
-
-
+        summary.querySelector('#sum_bags').innerText = 'Worki: '+bags+' szt. z: '+bags_content_str+''
+        var institution = (institution_form.querySelector("input[name='organization']:checked")).dataset.name;
         summary.querySelector('#sum_institution').innerText = 'Dla '+institution+'';
-        console.log(bags_content, summary.querySelector('#sum_institution'));
+
+        // address summary
+        summary.querySelector('#address').innerText = (address_form.querySelector("input[name='address']")).value;
+        summary.querySelector('#city').innerText = (address_form.querySelector("input[name='city']")).value;
+        summary.querySelector('#postcode').innerText = (address_form.querySelector("input[name='postcode']")).value;
+        summary.querySelector('#phone').innerText = (address_form.querySelector("input[name='phone']")).value;
+
+        // data info
+        summary.querySelector('#data').innerText = (data_form.querySelector("input[name='data']")).value;
+        summary.querySelector('#time').innerText = (data_form.querySelector("input[name='time']")).value
+        summary.querySelector('#info').innerText = (data_form.querySelector("textarea[name='more_info']")).value;
       }
     }
 
@@ -280,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: validation, send data to server
      */
     submit(e) {
-      e.preventDefault();
+      //e.preventDefault();
       this.currentStep++;
       this.updateForm();
     }
