@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block template %}
+
+      <div class="slogan container container--70">
+          <h2>
+            Profil użytkownika
+          </h2>
+          <div class="user_data">
+              <h4>
+                  <ul>
+                      <li>Imię: {{user.first_name}}</li>
+                      <li>Nazwisko: {{user.last_name}}</li>
+                      <li>Email: {{user.username}}</li>
+                  </ul>
+              </h4>
+          </div>
+      </div>
+    </header>
+{% endblock %}
