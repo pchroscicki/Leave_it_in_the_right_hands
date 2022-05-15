@@ -281,7 +281,6 @@ document.addEventListener("DOMContentLoaded", function() {
         summary.querySelector('#data').innerText = (data_form.querySelector("input[name='data']")).value;
         summary.querySelector('#time').innerText = (data_form.querySelector("input[name='time']")).value
         summary.querySelector('#info').innerText = (data_form.querySelector("textarea[name='more_info']")).value;
-        console.log((data_form.querySelector("input[name='time']")).value)
       }
     }
 
@@ -291,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: validation, send data to server
      */
     submit(e) {
-      e.preventDefault();
+      //e.preventDefault();
       this.currentStep++;
       this.updateForm();
     }
