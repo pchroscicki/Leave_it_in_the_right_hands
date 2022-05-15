@@ -9,6 +9,10 @@ from pkg_resources import _
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        """String for representing Category objects in Admin site."""
+        return self.name
+
 class Institution(models.Model):
     TYPE_CHOICES = (
         ('FOUNDATION', 'Foundation'),
@@ -19,6 +23,10 @@ class Institution(models.Model):
     description = models.TextField(null=True)
     type = models.CharField(choices=TYPE_CHOICES, default='FOUNDATION', max_length=64)
     categories = models.ManyToManyField(Category)
+
+    def __str__(self):
+        """String for representing Institution objects in Admin site."""
+        return self.name
 
 class Donation(models.Model):
     quantity = models.SmallIntegerField()
