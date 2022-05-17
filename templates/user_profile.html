@@ -1,19 +1,71 @@
 {% extends 'base.html' %}
 {% block template %}
 
-      <div class="slogan container container--70">
-          <h2>
-            Profil użytkownika
-          </h2>
+      <div class="slogan container container--90">
+          <h2>Profil użytkownika</h2>
           <div class="user_data">
-              <h4>
-                  <ul>
-                      <li>Imię: {{user.first_name}}</li>
-                      <li>Nazwisko: {{user.last_name}}</li>
-                      <li>Email: {{user.username}}</li>
-                  </ul>
-              </h4>
+              <h3>Twoje dane:</h3>
+              <p>Imię: {{user.first_name}}</p>
+              <p>Nazwisko: {{user.last_name}}</p>
+              <p>Email: {{user.username}}</p>
           </div>
       </div>
     </header>
+
+    <section class="steps">
+      <h2>Historia Twoich darowizn:</h2>
+        <table class="table container">
+            <thead>
+                <tr>
+                    <th>Worki [szt.]</th>
+                    <th>Przekazane dary</th>
+                    <th>Organizacja</th>
+                    <th>Data zgłoszenia</th>
+                    <th>Status</th>
+                    <th>Data realizacji</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for donation in user_donations %}
+                <tr>
+                    <td>{{donation.quantity}}</td>
+                    <td>{% for item in donation.categories.all %}
+                        {{item.name}},
+                        {% endfor %}
+                    </td>
+                    <td>{{donation.institution}}</td>
+                    <td >{{donation.pick_up_date}}
+                        {{donation.pick_up_time}}
+                    </td>
+                    <td>{{donation.is_taken}}
+                        <a href="{{donation.id}}/#status" class="btn">Aktualizuj</a>
+                    </td>
+                    <td >{{donation.status_update_date}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+  <!--  {% for donation in user_donations %}
+      <div class="steps--container">
+        <div class="steps--item">
+          <h3>Worki[szt.]</h3>
+          <p>{{donation.quantity}}</p>
+        </div>
+        <div class="steps--item">
+          <h3>Przekazane dary</h3>
+          {% for item in donation.categories.all %}
+            <p>{{item.name}},</p>
+            {% endfor %}
+        </div>
+        <div class="steps--item">
+          <h3>Organizacja</h3>
+          <p>{{donation.institution}}</p>
+        </div>
+        <div class="steps--item">
+          <h3>Data</h3>
+          <p>{{donation.pick_up_date}}</p>
+        </div>
+      </div>
+    {% endfor %}}-->
 {% endblock %}

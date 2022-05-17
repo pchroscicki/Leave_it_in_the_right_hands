@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block template %}
+    </header>
+    <div id="status" class="slogan container container--90">
+          <h2>
+            Zmiana statusu darowizny
+          </h2>
+        <div>
+            <h3>Opis darowizny:</h3>
+            <ul>
+                <li>Data odbioru {{donation_to_be_updated.pick_up_date}}</li>
+                <li>Liczba worków: {{donation_to_be_updated.quantity}}</li>
+                <li>Dary: {% for item in donation_to_be_updated.categories.all %}{{item.name}},{% endfor %}</li>
+                <li>Organizacja: {{donation_to_be_updated.institution}}</li>
+            </ul>
+        </div>
+    </div>
+    <form action="" method="post">
+          {% csrf_token %}
+        <div class="form-group form-group--checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  name="status"
+                  value="Zrealizowane"
+                />
+                  <span class="checkbox"></span>
+                  <span class="description">Przesyłka została odebrana</span>
+              </label>
+            </div>
+        <div class="form-group form-group--checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  name="status"
+                  value="Anulowane"
+                />
+                  <span class="checkbox"></span>
+                  <span class="description">Anuluj zgłoszenie</span>
+              </label>
+            </div>
+        {{errors}}
+        <div class="form-group form-group--buttons">
+              <button type="submit" class="btn">Potwierdzam</button>
+            </div>
+        </form>
+
+{% endblock %}
