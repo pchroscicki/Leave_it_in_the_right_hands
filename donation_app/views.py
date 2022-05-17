@@ -72,7 +72,8 @@ class AddDonationView(LoginRequiredMixin, View):
 class UserView(View):
 
     def get(self, request):
-        return render(request, 'user_profile.html')
+        context = {'user_donations': Donation.objects.filter(user_id=request.user.id).order_by('pick_up_date')}
+        return render(request, 'user_profile.html', context)
 
 class LoginView(View):
 
