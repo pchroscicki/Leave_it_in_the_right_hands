@@ -68,6 +68,27 @@ class AddDonationView(LoginRequiredMixin, View):
             new_donation.categories.add(id)
         return render(request, 'form-confirmation.html')
 
+class UpdateDonationStatusView(View):
+
+    def get(self, request, id):
+        context = {'donation_to_be_updated': Donation.objects.get(id=id)}
+        return render(request, 'form-status_update.html', context)
+
+    def post(self, request, id):
+        donation_to_be_updated = Donation.objects.get(id=id)
+        choice_list = request.POST.getlist('status')
+        if len(choice_list) == 1:
+            donation_to_be_updated.is_taken = request.POST.getlist('status')[0]
+            donation_to_be_updated.save()
+            return redirect('user_profile')
+        else:
+            context = {
+                'donation_to_be_updated': donation_to_be_updated,
+                'errors': 'Jeżeli chcesz zmienić status zgłoszenia wybierz jedną z dostępnych opcji.'}
+            return render(request, 'form-status_update.html', context)
+
+
+
 
 class UserView(View):
 

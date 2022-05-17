@@ -21,6 +21,7 @@
                     <th>Worki [szt.]</th>
                     <th>Przekazane dary</th>
                     <th>Organizacja</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,6 +34,9 @@
                         {% endfor %}
                     </td>
                     <td>{{donation.institution}}</td>
+                    <td>{{donation.is_taken}}
+                        <a href="{{donation.id}}/#status" class="btn">Aktualizuj</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
