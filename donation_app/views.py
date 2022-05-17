@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from more_itertools import sliced
 from datetime import date
-from django.db.models import F
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -135,6 +134,7 @@ class RegisterView(View):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             password = form.cleaned_data['password']
+
             user = User(username=username,
                         first_name=first_name,
                         last_name=last_name)

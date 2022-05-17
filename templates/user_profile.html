@@ -27,7 +27,7 @@
             </thead>
             <tbody>
             {% for donation in user_donations %}
-                <tr>
+                <tr class="{% if donation.is_taken == 'Zrealizowane' %}archived{% endif %}">
                     <td>{{donation.quantity}}</td>
                     <td>{% for item in donation.categories.all %}
                         {{item.name}},
