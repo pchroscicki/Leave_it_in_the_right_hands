@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from more_itertools import sliced
+from datetime import date
+from django.db.models import F
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -68,6 +70,7 @@ class AddDonationView(LoginRequiredMixin, View):
             new_donation.categories.add(id)
         return render(request, 'form-confirmation.html')
 
+
 class UpdateDonationStatusView(View):
 
     def get(self, request, id):
@@ -78,7 +81,9 @@ class UpdateDonationStatusView(View):
         donation_to_be_updated = Donation.objects.get(id=id)
         choice_list = request.POST.getlist('status')
         if len(choice_list) == 1:
-            donation_to_be_updated.is_taken = request.POST.getlist('status')[0]
+            donation_to_be_updated.is_taken = choice_list[0]
+            if choice_list[0] == 'Zrealizowane':
+                donation_to_be_updated.status_update_date = date.today()
             donation_to_be_updated.save()
             return redirect('user_profile')
         else:
@@ -88,12 +93,10 @@ class UpdateDonationStatusView(View):
             return render(request, 'form-status_update.html', context)
 
 
-
-
 class UserView(View):
 
     def get(self, request):
-        context = {'user_donations': Donation.objects.filter(user_id=request.user.id).order_by('pick_up_date')}
+        context = {'user_donations': Donation.objects.filter(user_id=request.user.id).order_by('-pick_up_date').order_by('-status_update_date')}
         return render(request, 'user_profile.html', context)
 
 class LoginView(View):

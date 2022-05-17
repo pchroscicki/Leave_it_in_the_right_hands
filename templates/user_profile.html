@@ -17,26 +17,30 @@
         <table class="table container">
             <thead>
                 <tr>
-                    <th>Data</th>
                     <th>Worki [szt.]</th>
                     <th>Przekazane dary</th>
                     <th>Organizacja</th>
+                    <th>Data zgłoszenia</th>
                     <th>Status</th>
+                    <th>Data realizacji</th>
                 </tr>
             </thead>
             <tbody>
             {% for donation in user_donations %}
                 <tr>
-                    <td >{{donation.pick_up_date}}</td>
                     <td>{{donation.quantity}}</td>
                     <td>{% for item in donation.categories.all %}
                         {{item.name}},
                         {% endfor %}
                     </td>
                     <td>{{donation.institution}}</td>
+                    <td >{{donation.pick_up_date}}
+                        {{donation.pick_up_time}}
+                    </td>
                     <td>{{donation.is_taken}}
                         <a href="{{donation.id}}/#status" class="btn">Aktualizuj</a>
                     </td>
+                    <td >{{donation.status_update_date}}</td>
                 </tr>
             {% endfor %}
             </tbody>
