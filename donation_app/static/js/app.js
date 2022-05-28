@@ -238,7 +238,8 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         }
       }
-      console.log(valid_inputs)
+
+      // Defines an adequate alert to display and returns 'false' value
       if (this.currentStep === 1 && valid_inputs === 0) {
         alert ('Zaznacz kategorię darów do przekazania');
         valid = false;
@@ -288,8 +289,6 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         }
 
-      // TODO: Validation
-
       this.slides.forEach(slide => {
         slide.classList.remove("active");
 
@@ -330,11 +329,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /**
      * Submit form
-     *
-     * TODO: validation, send data to server
      */
-    submit(e) {
-      //jeżeli element jest pusty to = e.preventDefault();
+    submit() {
       this.currentStep++;
       this.updateForm();
     }
