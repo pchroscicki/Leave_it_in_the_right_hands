@@ -55,7 +55,7 @@
         <form action="" method="post">
           {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
-          <div data-step="1" class="active" id="category-form">
+          <div data-step="1" class="active step" id="category-form">
             <h3>Zaznacz co chcesz oddać:</h3>
             {% for category in categories %}
             <div class="form-group form-group--checkbox single_category">
@@ -71,14 +71,13 @@
               </label>
             </div>
             {% endfor %}
-
             <div class="form-group form-group--buttons">
               <button type="button" class="btn next-step">Dalej</button>
             </div>
           </div>
 
           <!-- STEP 2 -->
-          <div data-step="2">
+          <div data-step="2" class="step">
             <h3>Podaj liczbę 60l worków, w które spakowałeś/aś rzeczy:</h3>
 
             <div class="form-group form-group--inline">
@@ -95,7 +94,7 @@
           </div>
 
           <!-- STEP 3 -->
-          <div data-step="3" id="institution-form">
+          <div data-step="3" class="step" id="institution-form">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
             {% for institution in institutions %}
             <div class="form-group form-group--checkbox single_institute" data-categories="{%for cat in institution.categories.all %} {{cat.id}},{%endfor%}">
@@ -119,7 +118,7 @@
           </div>
 
           <!-- STEP 4 -->
-          <div data-step="4">
+          <div data-step="4" class="step">
             <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
             <div class="form-section form-section--columns">
@@ -181,13 +180,13 @@
                   <li>
                     <span class="icon icon-bag"></span>
                     <span class="summary--text" id="sum_bags"
-                      >4 worki ubrań w dobrym stanie dla dzieci</span>
+                      ></span>
                   </li>
 
                   <li>
                     <span class="icon icon-hand"></span>
                     <span class="summary--text" id="sum_institution"
-                      >Dla fundacji "Mam marzenie" w Warszawie</span
+                      ></span
                     >
                   </li>
                 </ul>
