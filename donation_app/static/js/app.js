@@ -195,6 +195,8 @@ document.addEventListener("DOMContentLoaded", function() {
       // Next step
       this.$next.forEach(btn => {
         btn.addEventListener("click", e => {
+          // STOP movement if form is not valid
+          if (this.validateForm() === false) return false;
           e.preventDefault();
           this.currentStep++;
           this.updateForm();
@@ -215,6 +217,52 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /**
+     * Form validation - empty fields
+     */
+    validateForm() {
+      // Initial data
+      let step = document.querySelectorAll('.step')[this.currentStep-1]
+      let inputs = step.querySelectorAll('input');
+      let valid_inputs = 0;
+      let valid = true;
+
+      // Check if category input is empty:
+      for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].type === 'checkbox' && inputs[i].checked) {
+          valid_inputs++;
+        } if (inputs[i].type === 'radio' && inputs[i].checked) {
+          valid_inputs++;
+        } else {
+          if (inputs[i].value === '' || inputs[i].value === null) {
+            valid_inputs--;
+          }
+        }
+      }
+      console.log(valid_inputs)
+      if (this.currentStep === 1 && valid_inputs === 0) {
+        alert ('Zaznacz kategorię darów do przekazania');
+        valid = false;
+      }
+      if (this.currentStep === 2 && valid_inputs < 0) {
+        alert('Podaj łączną liczbę worków do przekazania');
+        valid = false;
+      }
+      if (this.currentStep === 2 && inputs[0].value < 1) {
+        alert('Minimalna liczba worków do przekazania to 1 szt.');
+        valid = false;
+      }
+      if (this.currentStep === 3 && valid_inputs === 0) {
+        alert('Wybierz organizację, którą chcesz wesprzeć');
+        valid = false;
+      }
+      if (this.currentStep === 4 && valid_inputs < 0) {
+        alert('Uzupełnij wszytskie pola dotyczące miejsca, daty i czasu odbioru');
+        valid = false;
+      }
+      return valid;
+    }
+
+    /**
      * Update form front-end
      * Show next or previous section etc.
      */
@@ -228,7 +276,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // institutions screening (narrows down the institution list to those that accept selected items)
       if (this.currentStep === 2) {
-        if (selected_categories.length > 0) {
           var institutions = Array.from(institution_form.querySelectorAll(".single_institute"));
           for (var i = 0; i < institutions.length; i++) {
             let categories_institution = Array.from(institutions[i].dataset.categories.replace(/\D/g, ""));
@@ -239,10 +286,7 @@ document.addEventListener("DOMContentLoaded", function() {
               }
             if (category_match !== selected_categories.length) {institutions[i].style.display = 'none'}
           }
-        } else {
-          console.log("Nie zaznaczono artykułów do przekazania");
         }
-      }
 
       // TODO: Validation
 
