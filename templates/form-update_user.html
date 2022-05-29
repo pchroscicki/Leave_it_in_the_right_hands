@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block template %}
+    </header>
+
+    <section id="user_update" class="login-page">
+      <h2>Zmień dane</h2>
+      <form method="POST" class="form--user_update">
+          {% csrf_token %}
+          {{ form_user.as_p }}
+          <button class="btn" type="submit">Wyślij</button>
+      </form><br/>
+        <div>
+          <a href="#" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
+        </div>
+    </section>
+
+{% endblock %}

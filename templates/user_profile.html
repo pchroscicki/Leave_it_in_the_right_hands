@@ -8,6 +8,8 @@
               <p>Imię: {{user.first_name}}</p>
               <p>Nazwisko: {{user.last_name}}</p>
               <p>Email: {{user.username}}</p>
+              <a href="" class="btn">Edytuj dane użytkownika</a>
+              <a href="" class="btn">Zmień hasło</a>
           </div>
       </div>
     </header>
@@ -45,27 +47,4 @@
             {% endfor %}
             </tbody>
         </table>
-
-  <!--  {% for donation in user_donations %}
-      <div class="steps--container">
-        <div class="steps--item">
-          <h3>Worki[szt.]</h3>
-          <p>{{donation.quantity}}</p>
-        </div>
-        <div class="steps--item">
-          <h3>Przekazane dary</h3>
-          {% for item in donation.categories.all %}
-            <p>{{item.name}},</p>
-            {% endfor %}
-        </div>
-        <div class="steps--item">
-          <h3>Organizacja</h3>
-          <p>{{donation.institution}}</p>
-        </div>
-        <div class="steps--item">
-          <h3>Data</h3>
-          <p>{{donation.pick_up_date}}</p>
-        </div>
-      </div>
-    {% endfor %}}-->
 {% endblock %}
