@@ -22,3 +22,25 @@ class RegisterForm(forms.Form):
         if password != password2:
             raise ValidationError("Hasła nie są zgodne")
 
+
+class UpdateUserForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('first_name',
+                  'last_name',
+                  'username',
+                  'password'
+                  )
+
+        def __init__(self, request, *args, **kwargs):
+            super().init(*args, **kwargs)
+
+            self.fields['first_name', 'last_name', 'username'].initial = request.user
+
+        def clean_username(self):
+            users = User.objects.filter(username=self.cleaned_data["username"])
+            if not users:
+                return self.cleaned_data["username"]
+            raise ValidationError("Podany email już jest zarejestrowany")
+
