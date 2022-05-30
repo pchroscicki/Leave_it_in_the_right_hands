@@ -14,7 +14,7 @@ class RegisterForm(forms.Form):
         users = User.objects.filter(username=self.cleaned_data["username"])
         if not users:
             return self.cleaned_data["username"]
-        raise ValidationError("Podany email już jest zarejestrowany")
+        raise ValidationError("Podany email jest już zarejestrowany")
 
     def clean(self):
         password = self.cleaned_data.get("password")
@@ -23,24 +23,8 @@ class RegisterForm(forms.Form):
             raise ValidationError("Hasła nie są zgodne")
 
 
-class UpdateUserForm(forms.ModelForm):
-
-    class Meta:
-        model = User
-        fields = ('first_name',
-                  'last_name',
-                  'username',
-                  'password'
-                  )
-
-        def __init__(self, request, *args, **kwargs):
-            super().init(*args, **kwargs)
-
-            self.fields['first_name', 'last_name', 'username'].initial = request.user
-
-        def clean_username(self):
-            users = User.objects.filter(username=self.cleaned_data["username"])
-            if not users:
-                return self.cleaned_data["username"]
-            raise ValidationError("Podany email już jest zarejestrowany")
+class UserUpdateForm(forms.Form):
+    first_name = forms.CharField(max_length=30, widget=forms.TextInput)
+    last_name = forms.CharField(max_length=64, widget=forms.TextInput)
+    username = forms.EmailField(max_length=64, widget=forms.TextInput)
 

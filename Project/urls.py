@@ -26,6 +26,8 @@ urlpatterns = [
     path('accounts/logout/', views.LogOutView.as_view(), name='logout'),
     path('accounts/register/', views.RegisterView.as_view(), name='register'),
     path('user/', views.UserView.as_view(), name='user_profile'),
-    path('user/<int:id>/', views.UpdateDonationStatusView.as_view(), name='update_donation_status')
+    path('user/<int:id>/', views.UpdateDonationStatusView.as_view(), name='update_donation_status'),
+    path('user_update/', views.UserUpdateView.as_view(), name='user_update'),
+
 ]
 

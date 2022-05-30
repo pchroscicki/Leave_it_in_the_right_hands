@@ -1,12 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
+from django.contrib import messages
 from more_itertools import sliced
 from datetime import date
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from donation_app.models import Donation, Institution, Category
-from donation_app.forms import RegisterForm, UpdateUserForm
+from donation_app.forms import RegisterForm, UserUpdateForm
 
 
 # Create your views here.
@@ -146,14 +148,29 @@ class RegisterView(View):
 
 class UserUpdateView(View):
     def get(self, request):
-        form = UpdateUserForm()
+        initial_data = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'username': request.user.username
+        }
+        form = UserUpdateForm(initial_data)
         return render(request, 'form-update_user.html', {'form': form})
 
     def post(self, request):
-        form = UpdateUserForm(request.POST)
+        form = UserUpdateForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data['password'] == request.user.password:
+            new_username = form.cleaned_data['username']
+            users = User.objects.filter(username=new_username)
+            if not users or new_username == request.user.username:
                 request.user.first_name = form.cleaned_data['first_name']
                 request.user.last_name = form.cleaned_data['last_name']
-                request.user.username = form.cleaned_data['username']
+                request.user.username = new_username
+                request.user.save()
+                return redirect('user_profile')
+            else:
+                return render(request, 'form-update_user.html', {
+                    'form': form,
+                    'error': "Podany email jest już zarejestrowany"
+                })
+        return render(request, 'form-update_user.html', {'form': form})
 
