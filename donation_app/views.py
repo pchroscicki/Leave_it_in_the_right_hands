@@ -6,7 +6,7 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from donation_app.models import Donation, Institution, Category
-from donation_app.forms import RegisterForm
+from donation_app.forms import RegisterForm, UpdateUserForm
 
 
 # Create your views here.
@@ -142,3 +142,18 @@ class RegisterView(View):
             user.save()
             return redirect('/accounts/login/#login')
         return render(request, 'register.html', {'form': form})
+
+
+class UserUpdateView(View):
+    def get(self, request):
+        form = UpdateUserForm()
+        return render(request, 'form-update_user.html', {'form': form})
+
+    def post(self, request):
+        form = UpdateUserForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['password'] == request.user.password:
+                request.user.first_name = form.cleaned_data['first_name']
+                request.user.last_name = form.cleaned_data['last_name']
+                request.user.username = form.cleaned_data['username']
+
