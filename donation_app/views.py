@@ -17,7 +17,12 @@ from donation_app.forms import RegisterForm, UserUpdateForm
 class LandingPageView(View):
 
     def get(self, request):
-        supported_institutions_count = self.supported_institutions_counter()
+        supported_institutions = []
+        all_donations = Donation.objects.all()
+        for query in all_donations:
+            if query.institution not in supported_institutions:
+                supported_institutions.append(query.institution)
+        supported_institutions_count = len(supported_institutions)
         context = {'bags_counter': sum([x.quantity for x in Donation.objects.all()]),
                    'institutions_counter': supported_institutions_count,
                    'foundations': Institution.objects.filter(type='FOUNDATION').order_by('name'),
@@ -25,15 +30,6 @@ class LandingPageView(View):
                    'local_charities': Institution.objects.filter(type='LOCAL CHARITY').order_by('name')
                    }
         return render(request, 'index.html', context)
-
-    @staticmethod
-    def supported_institutions_counter():
-        supported_institutions = []
-        all_donations = Donation.objects.all()
-        for query in all_donations:
-            if query.institution not in supported_institutions:
-                supported_institutions.append(query.institution)
-        return len(supported_institutions)
 
 
 class AddDonationView(LoginRequiredMixin, View):
