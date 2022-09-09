@@ -8,7 +8,7 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from donation_app.models import Donation, Institution, Category
-from donation_app.forms import RegisterForm, UserUpdateForm
+from donation_app.forms import CreateUserForm, UserUpdateForm
 
 
 # Create your views here.
@@ -122,21 +122,15 @@ class LogOutView(View):
 class RegisterView(View):
 
     def get(self, request):
-        form = RegisterForm()
+        form = CreateUserForm()
         return render(request, 'register.html', {'form': form})
 
     def post(self, request):
-        form = RegisterForm(request.POST)
+        form = CreateUserForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            password = form.cleaned_data['password']
-
-            user = User(username=username,
-                        first_name=first_name,
-                        last_name=last_name)
-            user.set_password(password)
+            user = form.save(commit=False)
+            user.username = form.cleaned_data['email']
+            user.set_password(form.cleaned_data['password'])
             user.save()
             return redirect('/accounts/login/#login')
         return render(request, 'register.html', {'form': form})
@@ -147,7 +141,7 @@ class UserUpdateView(View):
         initial_data = {
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
-            'username': request.user.username
+            'email': request.user.email
         }
         form = UserUpdateForm(initial_data)
         return render(request, 'form-update_user.html', {'form': form})
