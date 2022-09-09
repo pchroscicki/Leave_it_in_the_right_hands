@@ -7,7 +7,7 @@
       <form method="POST" class="form--user_update">
           {% csrf_token %}
           {{ form.as_p }}
-          {{error}}
+          <span>{{message}}</span>
           <button class="btn" type="submit">Zapisz</button>
       </form><br/>
         <div>

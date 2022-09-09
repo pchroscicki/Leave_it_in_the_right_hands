@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from more_itertools import sliced
 from datetime import date
 from django.views import View
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from donation_app.models import Donation, Institution, Category
 from donation_app.forms import CreateUserForm, UserUpdateForm
 
@@ -136,31 +136,19 @@ class RegisterView(View):
         return render(request, 'register.html', {'form': form})
 
 
-class UserUpdateView(View):
+class UserUpdateView(LoginRequiredMixin, View):
     def get(self, request):
-        initial_data = {
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'email': request.user.email
-        }
-        form = UserUpdateForm(initial_data)
+        form = UserUpdateForm(instance=request.user)
         return render(request, 'form-update_user.html', {'form': form})
 
     def post(self, request):
-        form = UserUpdateForm(request.POST)
-        if form.is_valid():
-            new_username = form.cleaned_data['username']
-            users = User.objects.filter(username=new_username)
-            if not users or new_username == request.user.username:
-                request.user.first_name = form.cleaned_data['first_name']
-                request.user.last_name = form.cleaned_data['last_name']
-                request.user.username = new_username
-                request.user.save()
+        form = UserUpdateForm(request.POST, instance=request.user)
+        try:
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.username = form.cleaned_data['email']
+                user.save()
                 return redirect('user_profile')
-            else:
-                return render(request, 'form-update_user.html', {
-                    'form': form,
-                    'error': "Podany email jest już zarejestrowany"
-                })
-        return render(request, 'form-update_user.html', {'form': form})
-
+        except IntegrityError as e:
+            message = 'Podany email jest już zarejestrowany'
+            return render(request, 'form-update_user.html', {'form': form, 'message': message})
