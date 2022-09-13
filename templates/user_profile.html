@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block template %}
+    </header>
 
+    <section id="user_profile" class="login-page">
       <div class="slogan container container--90">
           <h2>Profil użytkownika</h2>
           <div class="user_data">
@@ -8,8 +10,8 @@
               <p>Imię: {{user.first_name}}</p>
               <p>Nazwisko: {{user.last_name}}</p>
               <p>Email: {{user.username}}</p>
-              <a href="{% url 'user_update' %}" class="btn">Edytuj dane użytkownika</a>
-              <a href="{% url 'change_password' %}" class="btn">Zmień hasło</a>
+              <a href="{% url 'user_update' %}#user_update" class="btn">Edytuj dane użytkownika</a>
+              <a href="{% url 'change_password' %}#user_update" class="btn">Zmień hasło</a>
           </div>
       </div>
     </header>
@@ -47,4 +49,6 @@
             {% endfor %}
             </tbody>
         </table>
+    </section>
+
 {% endblock %}
