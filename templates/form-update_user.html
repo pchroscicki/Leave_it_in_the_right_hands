@@ -7,7 +7,13 @@
       <form method="POST" class="form--user_update">
           {% csrf_token %}
           {{ form.as_p }}
-          <span>{{message}}</span>
+          {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li>{% if message.tags %} {{ message.tags }}: {% endif %} '{{ message }}'</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
           <button class="btn" type="submit">Zapisz</button>
       </form><br/>
         <div>

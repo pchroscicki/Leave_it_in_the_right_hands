@@ -28,6 +28,6 @@ urlpatterns = [
     path('user/', views.UserView.as_view(), name='user_profile'),
     path('user/<int:id>/', views.UpdateDonationStatusView.as_view(), name='update_donation_status'),
     path('user_update/', views.UserUpdateView.as_view(), name='user_update'),
-
+    path('user_password/', views.PasswordChangeView.as_view(), name='change_password')
 ]
 

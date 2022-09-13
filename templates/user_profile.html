@@ -9,7 +9,7 @@
               <p>Nazwisko: {{user.last_name}}</p>
               <p>Email: {{user.username}}</p>
               <a href="{% url 'user_update' %}" class="btn">Edytuj dane użytkownika</a>
-              <a href="" class="btn">Zmień hasło</a>
+              <a href="{% url 'change_password' %}" class="btn">Zmień hasło</a>
           </div>
       </div>
     </header>
