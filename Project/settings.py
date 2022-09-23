@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'donation_app',
-    'phonenumber_field',
+    'phonenumber_field'
 ]
 
 MIDDLEWARE = [
@@ -84,6 +84,12 @@ DATABASES = {
         'PASSWORD': 'coderslab',
     }
 }
+
+
+#Email
+
+DEFAULT_FROM_EMAIL = "pu3ek.zip@vp.pl"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 # Password validation

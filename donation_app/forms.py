@@ -39,3 +39,9 @@ class UserUpdateForm(forms.ModelForm):
             'last_name',
             'email'
         ]
+
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder': 'Temat'}))
+    from_email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'placeholder': 'Twój email'}))
+    message = forms.CharField(required=True, widget=forms.Textarea(attrs={'placeholder': 'Wiadomość'}))

@@ -9,8 +9,9 @@ from datetime import date
 from django.views import View
 from django.shortcuts import render, redirect
 from donation_app.models import Donation, Institution, Category
-from donation_app.forms import CreateUserForm, UserUpdateForm
-
+from donation_app.forms import CreateUserForm, UserUpdateForm, ContactForm
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -18,6 +19,7 @@ from donation_app.forms import CreateUserForm, UserUpdateForm
 class LandingPageView(View):
 
     def get(self, request):
+        form_contact = ContactForm()
         supported_institutions = []
         all_donations = Donation.objects.all()
         for query in all_donations:
@@ -28,9 +30,24 @@ class LandingPageView(View):
                    'institutions_counter': supported_institutions_count,
                    'foundations': Institution.objects.filter(type='FOUNDATION').order_by('name'),
                    'ngos': Institution.objects.filter(type='NON-GOVERNMENTAL ORGANISATION').order_by('name'),
-                   'local_charities': Institution.objects.filter(type='LOCAL CHARITY').order_by('name')
+                   'local_charities': Institution.objects.filter(type='LOCAL CHARITY').order_by('name'),
+                   'form_contact': form_contact
                    }
         return render(request, 'index.html', context)
+
+    def post(self, request):
+        if request.method == "POST":
+            form_contact = ContactForm(request.POST)
+            if form_contact.is_valid():
+                subject = form_contact.cleaned_data["subject"]
+                from_email = form_contact.cleaned_data["from_email"]
+                message = form_contact.cleaned_data['message']
+                try:
+                    send_mail(subject, message, from_email, ["pu3ek.zip@vp.pl"])
+                except BadHeaderError:
+                    return HttpResponse("Invalid header found.")
+                return render(request, 'email-confirmation.html')
+        return redirect('index')
 
 
 class AddDonationView(LoginRequiredMixin, View):
@@ -171,3 +188,4 @@ class PasswordChangeView(LoginRequiredMixin, View):
             messages.error(request, 'Błąd hasła')
             form = PasswordChangeForm(request.user)
             return render(request, 'form-update_user.html', {'form': form})
+
