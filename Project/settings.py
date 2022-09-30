@@ -88,8 +88,16 @@ DATABASES = {
 
 #Email
 
-DEFAULT_FROM_EMAIL = "pu3ek.zip@vp.pl"
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
+EMAIL_HOST = 'smtp.gmail.pl'
+EMAIL_HOST_USER = #yourgmail@gmail.com
+EMAIL_HOST_PASSWORD = #yourpassword
+EMAIL_PORT = 587
+EMAIL_USE_TSL = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+PASSWORD_RESET_TIMEOUT = 16400
 
 
 # Password validation
