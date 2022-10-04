@@ -42,6 +42,17 @@
           </ul>
           {% endif %}
         </nav>
+
+        {% if messages %}
+          <div class="messages">
+              {% for message in messages %}
+                <ul {% if message.tags %} class="{{ message.tags }}": {% endif %}>
+                    {{ message}}
+                </ul>
+              {% endfor %}
+          </div>
+        {% endif %}
+
   {% block template %}
   {% endblock %}
     <script src="{% static 'js/app.js' %}"></script>

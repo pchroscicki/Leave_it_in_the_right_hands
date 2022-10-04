@@ -52,6 +52,7 @@ class LandingPageView(View):
                 except BadHeaderError:
                     return HttpResponse("Invalid header found.")
                 return render(request, 'email-confirmation.html')
+        messages.error(request, "Wysłanie wiadomości nie powiodło się.")
         return redirect('index')
 
 
@@ -105,11 +106,13 @@ class UpdateDonationStatusView(View):
             if choice_list[0] == 'Zrealizowane':
                 donation_to_be_updated.status_update_date = date.today()
             donation_to_be_updated.save()
+            messages.success(request, "Pomyślnie zmieniono status zgłoszenia.")
             return redirect('user_profile')
         else:
             context = {
                 'donation_to_be_updated': donation_to_be_updated,
-                'errors': 'Jeżeli chcesz zmienić status zgłoszenia wybierz jedną z dostępnych opcji.'}
+                'tip': 'Jeżeli chcesz zmienić status zgłoszenia wybierz jedną z dostępnych opcji.'}
+            messages.error(request, "Status zgłoszenia nie uległ zmianie")
             return render(request, 'form-status_update.html', context)
 
 
@@ -130,15 +133,19 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            messages.success(request, f"Witaj {user.first_name} {user.last_name}!")
             return redirect('index')
         elif user is None:
+            messages.error(request, "Twój login nie został rozpoznany. Wypełnij formularz i zarejestruj się.")
             return redirect('register')
+        messages.error(request, "Niepoprawne hasło.")
         return render(request, 'login.html')
 
 
 class LogOutView(View):
     def get(self, request):
         logout(request)
+        messages.success(request, "Nastąpiło poprawne wylogowanie z systemu.")
         return redirect('index')
 
 
@@ -223,7 +230,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
             messages.success(request, 'Twoje hasło zostało zmienione')
             return redirect('user_profile')
         else:
-            messages.error(request, 'Błąd hasła')
+            messages.error(request, 'Niepoprawne hasło')
             form = PasswordChangeForm(request.user)
             return render(request, 'form-update_user.html', {'form': form})
 
